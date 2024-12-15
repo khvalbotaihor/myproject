@@ -30,7 +30,7 @@ Scenario: Get 10 articles
     And match each response..following == false
     And match each response..following == '#boolean'
     And match each response..favoritesCount == '#number'
-    And match response..bio == '##string' //## it's a null  or optional or string
+    And match each response..bio == '#null' //## it's a null  or optional or string
 
 
    
