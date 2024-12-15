@@ -10,6 +10,7 @@ Scenario: @getTags Get all tags
     Then status 200
     And match response.tags contains ['Test', 'Coding']
     And match response.tags !contains ['test']
+    And match response.tags contains any ['Zoom', 'Git', 'YouTube']
     And match response.tags == "#array"
     And match each response.tags == '#string'
     * print 'test 3'
@@ -21,9 +22,13 @@ Scenario: Get 10 articles
     Then status 200
     And match response.articles == '#[10]'
     And match response.articlesCount == 10
-    * print 'test 4'
-    # And match each response.articles == '#{}'
-
+    And match response.articlesCount != 11
+    And match response == {"articles": "#array",articlesCount: 10}
+    And match response.articles[0].createdAt contains '2024'
+    And match response.articles[*].favoritesCount contains 427
+    And match response..bio contains null
+    And match each response..following == false
+ 
 
 
    
