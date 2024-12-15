@@ -16,6 +16,8 @@ Scenario: @getTags Get all tags
     * print 'test 3'
 
 Scenario: Get 10 articles
+    * def timeValidator = read('classpath:helpers/validator.js')
+
     Given params {limit: 10,offset: 0}
     Given path 'articles'  
     When method Get
@@ -31,6 +33,23 @@ Scenario: Get 10 articles
     And match each response..following == '#boolean'
     And match each response..favoritesCount == '#number'
     And match each response..bio == '#null' //## it's a null  or optional or string
-
-
-   
+    And match each response.articles ==
+   """
+    {
+            "slug": "#string",
+            "title": "#string",
+            "description": "#string",
+            "body": "#string",
+            "tagList": "#array",
+            "createdAt": '#? timeValidator(_)',
+            "updatedAt": '#? timeValidator(_)',
+            "favorited": "#boolean",
+            "favoritesCount": "#number",
+            "author": {
+                "username": "#string",
+                "bio": "#null",
+                "image": "#string",
+                "following": "#boolean"
+            }
+        } 
+   """
