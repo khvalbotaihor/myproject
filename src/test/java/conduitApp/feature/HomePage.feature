@@ -2,7 +2,7 @@
 Feature: Tests for the home page
 
 Background: Define URL
-    Given url 'https://conduit-api.bondaracademy.com/api/'
+    Given url apiUrl
 
 Scenario: @getTags Get all tags
     Given path 'tags'
