@@ -3,7 +3,7 @@ Feature: Articles
 Background: Define URL
     Given url apiUrl
 
-    @debug
+@debug
 Scenario: Create a new article
     Given path 'articles'
     And request {"article":{"title":"test2","description":"article ","body":"description","tagList":["rag 1"]}}
