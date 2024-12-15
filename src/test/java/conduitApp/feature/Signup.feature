@@ -46,3 +46,41 @@ Feature: Sign up new user
         * print 'user response' + resp  
 
 
+
+
+    Scenario: Validate sign up error message
+        * def randomEmail = dataGenerator.getRandomEmail()    
+        * def randomUsername = dataGenerator.getRandomUsername()
+
+        Given path 'users'
+        And request 
+        """
+            {"user":
+                {
+                    "email": "upqode.igor@gmail.com",
+                    "password":"3345375333",
+                    "username": #(randomUsername)
+                }
+            }
+        """
+        When method Post
+        Then status 422 
+
+
+    Scenario: Validate sign up error message
+        * def randomEmail = dataGenerator.getRandomEmail()    
+        * def randomUsername = dataGenerator.getRandomUsername()
+
+        Given path 'users'
+        And request 
+        """
+            {"user":
+                {
+                    "email": #(randomEmail),
+                    "password":"3345375333",
+                    "username": 'ihor'
+                }
+            }
+        """
+        When method Post
+        Then status 422 
