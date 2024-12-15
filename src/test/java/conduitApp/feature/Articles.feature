@@ -2,12 +2,14 @@ Feature: Articles
 
 Background: Define URL
     Given url 'https://conduit-api.bondaracademy.com/api/'
-    Given path 'users/login'
-    And request {"user":{"email":"ihorkhvalbota@gmail.com","password":"sabato2024"}}
-    When method Post
-    Then status 200
-    And match response.user.token != null
-* def token = response.user.token
+    # Given path 'users/login'
+    # And request {"user":{"email":"ihorkhvalbota@gmail.com","password":"sabato2024"}}
+    # When method Post
+    # Then status 200
+    # And match response.user.token != null
+    # * def token = response.user.token
+    * def tokenResponse = call read('classpath:helpers/CreateToken.feature')
+    * def token = tokenResponse.authToken
 
     @debug
 Scenario: Create a new article
