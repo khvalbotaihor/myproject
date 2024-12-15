@@ -2,12 +2,11 @@ Feature: Sign up new user
 
     Background: Preconditions
      * def dataGenerator = Java.type('helpers.dataGenerator')   
+     * def randomEmail = dataGenerator.getRandomEmail()    
+     * def randomUsername = dataGenerator.getRandomUsername()
      Given url apiUrl
 
     Scenario: Sign up a new user
-        * def randomEmail = dataGenerator.getRandomEmail()    
-        * def randomUsername = dataGenerator.getRandomUsername()
-
         * def jsFunction =
         """
             function () {
@@ -48,39 +47,27 @@ Feature: Sign up new user
 
 
 
-    Scenario: Validate sign up error message
-        * def randomEmail = dataGenerator.getRandomEmail()    
-        * def randomUsername = dataGenerator.getRandomUsername()
-
+    Scenario Outline: Validate sign up error message
         Given path 'users'
         And request 
         """
             {"user":
                 {
-                    "email": "upqode.igor@gmail.com",
-                    "password":"3345375333",
-                    "username": #(randomUsername)
+                    "email": <email>,
+                    "password":<password>,
+                    "username": <username>
                 }
             }
         """
         When method Post
         Then status 422 
+        And match response == <errorResponse>
 
-
-    Scenario: Validate sign up error message
-        * def randomEmail = dataGenerator.getRandomEmail()    
-        * def randomUsername = dataGenerator.getRandomUsername()
-
-        Given path 'users'
-        And request 
-        """
-            {"user":
-                {
-                    "email": #(randomEmail),
-                    "password":"3345375333",
-                    "username": 'ihor'
-                }
-            }
-        """
-        When method Post
-        Then status 422 
+        Examples:
+            | email                 | password   | username          | errorResponse                                      |
+            | #(randomEmail)        | karate1234 | ihor              | {"errors":{"username":["has already been taken"]}} |
+            | #(randomEmail)        | karate1231 |  ""                 | {"errors":{"username":["can't be blank"]}}         |
+            | upqode.igor@gmail.com | karate1234 | #(randomUsername) | {"errors":{"email":["has already been taken"]}}    |
+            | upqode.igor@gmail.com | karate1234 | ihor              | {"errors":{"email":["has already been taken"],"username":["has already been taken"]}} | 
+            |                       | karate1234 | #(randomUsername) | {"errors":{"email":["can't be blank"]}}            |
+            | #(randomEmail)        |            | #(randomUsername) | {"errors":{"password":["can't be blank"]}}         |
