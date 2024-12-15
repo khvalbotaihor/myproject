@@ -28,7 +28,9 @@ Scenario: Get 10 articles
     And match response.articles[*].favoritesCount contains 427
     And match response..bio contains null
     And match each response..following == false
- 
+    And match each response..following == '#boolean'
+    And match each response..favoritesCount == '#number'
+    And match response..bio == '##string' //## it's a null  or optional or string
 
 
    
