@@ -47,7 +47,7 @@ Feature: Sign up new user
 
 
 
-    Scenario Outline: Validate sign up error message
+    Scenario Outline: Validate sign up error message, Data Driven Scenario
         Given path 'users'
         And request 
         """
