@@ -75,13 +75,7 @@ Scenario: Get 10 articles
 
         * if(favoritesCount == 0) karate.call('classpath:helpers/AddLikes.feature', newArticleResponse)
 
-        Given path 'articles',newArticleResponseSlugId
-        When method Get
-        Then status 200
-        * print 'favoritesCountCheck', response
-        * def favoritesCountCheck = response.favoriteCount
-
-        * if(favoritesCountCheck > 0) karate.call('classpath:helper/DeleteLikes.feature', newArticleResponse)
+        # * if(favoritesCount == 0) karate.call('classpath:helper/DeleteLikes.feature', newArticleResponse)
        
         Given path 'articles' ,newArticleResponseSlugId
         When method Delete
