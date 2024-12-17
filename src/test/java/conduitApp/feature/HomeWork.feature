@@ -2,10 +2,6 @@ Feature: Home Work
 
     Background: Preconditions
         * url apiUrl
-    Scenario: Favorite articles
-        * def timeValidator = read('classpath:helpers/validator.js')
-
-        #step 1: get articles of the global feed
         Given params {limit: 10,offset: 0}
         Given path 'articles'  
         When method Get
@@ -14,6 +10,12 @@ Feature: Home Work
         And def firstArticleSlug = firstArticleWithFavorite.slug
         And def firstArticleFavorited = firstArticleWithFavorite.favorited
         And def firstArticlefavoritesCount = firstArticleWithFavorite.favoritesCount
+
+    Scenario: Favorite articles
+        * def timeValidator = read('classpath:helpers/validator.js')
+
+        #step 1: get articles of the global feed
+        
         And match firstArticleFavorited == false
         And match firstArticlefavoritesCount == 0
         #step 2: get the favorites count and slug id for the first article, save to variable
@@ -110,5 +112,56 @@ Feature: Home Work
    
         
     Scenario: comment article
+        #step 1: get articles of the global feed
+        #step 2: get the slug id for the first article, save it to variable
+        #step 3: make get call to "comments" endpoint to get a;; comments
+
+        Given path 'articles/'+firstArticleSlug+'/comments' 
+        When method Get
+        Then status 200
+        And match response.comments == []
+        And match response ==
+        """
+            {"comments":[]}
+        """
+        And def commentsNumber = response.comments.length    
+
+
+        #step 4: verify response schema
+        #step 5: get the count of the articles array length and save to variable
+        #example
+        * def resposeWithcomments = [{"article": "first"},{article: "second"}]
+        # * def articlesCount = response With comment.length
+        #step 6: make post request to publish a new comment
+
+        Given path 'articles/'+firstArticleSlug+'/comments' 
+        And request {"comment":{"body":"new comment"}}
+        When method Post
+        Then status 200
+        And match response.comment.body == "new comment"
+
+
+        Given path 'articles/'+firstArticleSlug+'/comments' 
+        When method Get
+        Then status 200
+        And def commentId = response.comments[0].id
+        And def commentsCount = response.comments.length
+        * print response
+        And match commentsCount == (commentsNumber + 1)
+        #step 7: verify response schema that should contain posted comment text
+        #test 8: get the list of all the comments for this article one more time
+        #test 9: verify number of comments increased by 1
+        #step 10: make a delete request to delete comment
+        #articles/Jon-Hollard-14338/comments/86616
+        Given path 'articles/'+firstArticleSlug+'/comments/'+commentId
+        When method Delete
+        Then status 200
+        And match response == {}
+        #step 11: get all comments again and verify number of comments decreased by 1
+        Given path 'articles/'+firstArticleSlug+'/comments' 
+        When method Get
+        Then status 200
+        And match response.comments == []
+  
         
         
