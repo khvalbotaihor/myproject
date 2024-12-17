@@ -52,3 +52,12 @@ Scenario: Get 10 articles
             }
         } 
    """
+
+
+
+    Scenario: Conditional logic
+        Given params {limit: 10,offset: 0}
+        Given path 'articles'  
+        When method Get
+        Then status 200
+        * def faroritesCount = response.articles[0].faroritesCount
