@@ -16,8 +16,8 @@ Background: Background
 
 Scenario: First scenario
     # * print 'username: '+ username
-    * print 'This is first scenario'
+    # * print 'This is first scenario'
 
 Scenario: Second scenario
     # * print 'username: '+ username
-    * print 'This is second scenario'
+    # * print 'This is second scenario'

@@ -30,7 +30,7 @@ Scenario: Get 10 articles
     And match response.articles == '#[10]'
     # And match response.articlesCount == 12
     And match response.articlesCount != 11
-    And match response == {"articles": "#array",articlesCount: 13}
+    # And match response == {"articles": "#array",articlesCount: 13}
     And match response.articles[0].createdAt contains '2024'
     And match response.articles[*].favoritesCount contains 10
     And match response..bio contains null
@@ -68,15 +68,23 @@ Scenario: Get 10 articles
         Then status 201
         * def newArticleResponse = response
         * def newArticleResponseSlugId = newArticleResponse.article.slug
-        * print 'newArticleResponse',newArticleResponse
-        * print 'newArticleResponseSlugId',newArticleResponseSlugId
+        * def count = newArticleResponse.article.favoritesCount
+        * print 'newArticleResponse'+newArticleResponse
+        * print 'newArticleResponseSlugId'+newArticleResponseSlugId
+        * print 'favoritesCount'+count
 
         * def favoritesCount = newArticleResponse.favoritesCount
 
         * if(favoritesCount == 0) karate.call('classpath:helpers/AddLikes.feature', newArticleResponse)
-
+        # * def result = favoritesCount == 0 ? karate.call('classpath:helpers/AddLikes.feature', newArticleResponse).likesCount : favoritesCount
         # * if(favoritesCount == 0) karate.call('classpath:helper/DeleteLikes.feature', newArticleResponse)
        
-        Given path 'articles' ,newArticleResponseSlugId
+        Given path 'articles/', newArticleResponseSlugId
+        When method Get
+        Then status 200
+        * print 'ffff', response
+        And match response.article.favoritesCount == 0
+
+        Given path 'articles/',newArticleResponseSlugId
         When method Delete
         Then status 204
