@@ -85,7 +85,6 @@ Feature: Home Work
         Given path 'articles'  
         When method Get
         Then status 200
-        * print 'response1 '+ response
         When def favoritedArticles = $response.articles[?(@.favoritesCount > 0)]
         And def favoritedArticlesCount = favoritedArticles.length
         And match favoritedArticlesCount == 9
@@ -146,7 +145,6 @@ Feature: Home Work
         Then status 200
         And def commentId = response.comments[0].id
         And def commentsCount = response.comments.length
-        * print response
         And match commentsCount == (commentsNumber + 1)
         #step 7: verify response schema that should contain posted comment text
         #test 8: get the list of all the comments for this article one more time

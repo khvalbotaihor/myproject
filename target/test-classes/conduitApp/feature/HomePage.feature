@@ -13,7 +13,6 @@ Scenario: @getTags Get all tags
     And match response.tags contains any ['Zoom', 'Git', 'YouTube']
     And match response.tags == "#array"
     And match each response.tags == '#string'
-    * print 'test 3'
 
 Scenario: Get 10 articles
     * def timeValidator = read('classpath:helpers/validator.js')
