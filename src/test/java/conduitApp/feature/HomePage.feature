@@ -61,3 +61,4 @@ Scenario: Get 10 articles
         When method Get
         Then status 200
         * def faroritesCount = response.articles[0].faroritesCount
+        * if(faroritesCount == 0) karate.call()

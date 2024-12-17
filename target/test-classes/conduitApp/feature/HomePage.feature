@@ -3,6 +3,12 @@ Feature: Tests for the home page
 
 Background: Define URL
     Given url apiUrl
+    * def newArticleJson = read('classpath:conduitApp/json/newArticleRequest.json')
+    * def dataGenerator = Java.type('helpers.dataGenerator')   
+    * set newArticleJson.article.title = dataGenerator.getRandomArticleValues().title;
+    * set newArticleJson.article.description = dataGenerator.getRandomArticleValues().description;
+    * set newArticleJson.article.body = dataGenerator.getRandomArticleValues().body;
+
 
 Scenario: @getTags Get all tags
     Given path 'tags'
@@ -22,9 +28,9 @@ Scenario: Get 10 articles
     When method Get
     Then status 200
     And match response.articles == '#[10]'
-    And match response.articlesCount == 12
+    # And match response.articlesCount == 12
     And match response.articlesCount != 11
-    And match response == {"articles": "#array",articlesCount: 12}
+    And match response == {"articles": "#array",articlesCount: 13}
     And match response.articles[0].createdAt contains '2024'
     And match response.articles[*].favoritesCount contains 10
     And match response..bio contains null
@@ -56,8 +62,27 @@ Scenario: Get 10 articles
 
 
     Scenario: Conditional logic
-        Given params {limit: 10,offset: 0}
-        Given path 'articles'  
+        Given path 'articles'
+        And request newArticleJson
+        When method Post
+        Then status 201
+        * def newArticleResponse = response
+        * def newArticleResponseSlugId = newArticleResponse.article.slug
+        * print 'newArticleResponse',newArticleResponse
+        * print 'newArticleResponseSlugId',newArticleResponseSlugId
+
+        * def favoritesCount = newArticleResponse.favoritesCount
+
+        * if(favoritesCount == 0) karate.call('classpath:helpers/AddLikes.feature', newArticleResponse)
+
+        Given path 'articles',newArticleResponseSlugId
         When method Get
         Then status 200
-        * def faroritesCount = response.articles[0].faroritesCount
+        * print 'favoritesCountCheck', response
+        * def favoritesCountCheck = response.favoriteCount
+
+        * if(favoritesCountCheck > 0) karate.call('classpath:helper/DeleteLikes.feature', newArticleResponse)
+       
+        Given path 'articles' ,newArticleResponseSlugId
+        When method Delete
+        Then status 204
