@@ -13,7 +13,7 @@ class ConduitTest {
     void testParallel() {
         Results results = Runner.path("classpath:conduitApp")
                 //.outputCucumberJson(true)
-                .parallel(1);
+                .parallel(5);
         assertEquals(0, results.getFailCount(), results.getErrorMessages());
     }
      @Karate.Test
