@@ -41,10 +41,6 @@ Feature: Sign up new user
                 "token": "#string"
             }
         """
-        * def resp = response.user
-        * print 'user response' + resp  
-
-
 
 
     Scenario Outline: Validate sign up error message, Data Driven Scenario
@@ -62,12 +58,15 @@ Feature: Sign up new user
         When method Post
         Then status 422 
         And match response == <errorResponse>
+        * print response
+
 
         Examples:
             | email                 | password   | username          | errorResponse                                      |
             | #(randomEmail)        | karate1234 | ihor              | {"errors":{"username":["has already been taken"]}} |
-            | #(randomEmail)        | karate1231 |  ""                 | {"errors":{"username":["can't be blank"]}}         |
+            | #(randomEmail)        | karate1231 |  ""               | {"errors":{"username":["can't be blank"]}}         |
             | upqode.igor@gmail.com | karate1234 | #(randomUsername) | {"errors":{"email":["has already been taken"]}}    |
-            | upqode.igor@gmail.com | karate1234 | ihor              | {"errors":{"email":["has already been taken"],"username":["has already been taken"]}} | 
             |                       | karate1234 | #(randomUsername) | {"errors":{"email":["can't be blank"]}}            |
             | #(randomEmail)        |            | #(randomUsername) | {"errors":{"password":["can't be blank"]}}         |
+            | upqode.igor@gmail.com | karate1234 | ihor              | {"errors":{"email":["has already been taken"],"username":["has already been taken"]}} | 
+
