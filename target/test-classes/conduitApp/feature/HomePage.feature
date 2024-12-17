@@ -8,6 +8,7 @@ Background: Define URL
     * set newArticleJson.article.title = dataGenerator.getRandomArticleValues().title;
     * set newArticleJson.article.description = dataGenerator.getRandomArticleValues().description;
     * set newArticleJson.article.body = dataGenerator.getRandomArticleValues().body;
+    * def sleep = function(pause){ java.lang.Thread.sleep(pause) }
 
 
 Scenario: @getTags Get all tags
@@ -69,18 +70,18 @@ Scenario: Get 10 articles
         * def newArticleResponse = response
         * def newArticleResponseSlugId = newArticleResponse.article.slug
         * def count = newArticleResponse.article.favoritesCount
-        * print 'newArticleResponse'+newArticleResponse
-        * print 'newArticleResponseSlugId'+newArticleResponseSlugId
-        * print 'favoritesCount'+count
+        # * print 'newArticleResponse'+newArticleResponse
+        # * print 'newArticleResponseSlugId'+newArticleResponseSlugId
+        # * print 'favoritesCount'+count
 
         * def favoritesCount = newArticleResponse.favoritesCount
 
         * if(favoritesCount == 0) karate.call('classpath:helpers/AddLikes.feature', newArticleResponse)
         # * def result = favoritesCount == 0 ? karate.call('classpath:helpers/AddLikes.feature', newArticleResponse).likesCount : favoritesCount
         # * if(favoritesCount == 0) karate.call('classpath:helper/DeleteLikes.feature', newArticleResponse)
-       
         Given path 'articles/', newArticleResponseSlugId
         When method Get
+        * eval sleep(5000)
         Then status 200
         * print 'ffff', response
         And match response.article.favoritesCount == 0
@@ -88,3 +89,18 @@ Scenario: Get 10 articles
         Given path 'articles/',newArticleResponseSlugId
         When method Delete
         Then status 204
+
+    Scenario: Retry call
+        * configure retry = {count:10, interval: 5000}
+
+        Given params {limit: 10,offset: 0}
+        Given path 'articles'  
+        And retry until response.articles[0].favoritesCount ==0
+        When method Get
+        Then status 200
+
+    Scenario: sleep call
+        Given params {limit: 10,offset: 0}
+        Given path 'articles'  
+        When method Get
+        Then status 200
