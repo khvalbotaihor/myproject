@@ -81,7 +81,7 @@ Scenario: Get 10 articles
         # * if(favoritesCount == 0) karate.call('classpath:helper/DeleteLikes.feature', newArticleResponse)
         Given path 'articles/', newArticleResponseSlugId
         When method Get
-        * eval sleep(5000)
+        # * eval sleep(5000)
         Then status 200
         * print 'ffff', response
         And match response.article.favoritesCount == 0
@@ -95,7 +95,7 @@ Scenario: Get 10 articles
 
         Given params {limit: 10,offset: 0}
         Given path 'articles'  
-        And retry until response.articles[0].favoritesCount ==0
+        # And retry until response.articles[0].favoritesCount ==0
         When method Get
         Then status 200
 
