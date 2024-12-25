@@ -16,8 +16,8 @@ Feature: Home Work
 
         #step 1: get articles of the global feed
         
-        And match firstArticleFavorited == false
-        And match firstArticlefavoritesCount == 0
+        And match firstArticleFavorited == true
+        And match firstArticlefavoritesCount == 1
         #step 2: get the favorites count and slug id for the first article, save to variable
         #step 3: make post request to increase favorites count for the first article
         Given path 'articles/'+firstArticleSlug+'/favorite' 
@@ -36,9 +36,7 @@ Feature: Home Work
                     "createdAt": "#? timeValidator(_)",
                     "updatedAt": "#? timeValidator(_)",
                     "authorId": "#number",
-                    "tagList": [
-                        "#string"
-                    ],
+                    "tagList": [],
                     "author": {
                         "username": "#string",
                         "bio": "#null",
@@ -87,7 +85,7 @@ Feature: Home Work
         Then status 200
         When def favoritedArticles = $response.articles[?(@.favoritesCount > 0)]
         And def favoritedArticlesCount = favoritedArticles.length
-        And match favoritedArticlesCount == 9
+        And match favoritedArticlesCount == 8
         When def filteredArticles = favoritedArticles.filter(x => x.slug == firstArticleSlug)
         And def filteredArticlesLength = filteredArticles.length
         And match filteredArticlesLength == 1

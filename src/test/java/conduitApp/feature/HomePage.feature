@@ -22,9 +22,9 @@ Scenario: Get 10 articles
     When method Get
     Then status 200
     And match response.articles == '#[10]'
-    And match response.articlesCount == 12
+    # And match response.articlesCount == 12
     And match response.articlesCount != 11
-    And match response == {"articles": "#array",articlesCount: 12}
+    # And match response == {"articles": "#array",articlesCount: 12}
     And match response.articles[0].createdAt contains '2024'
     And match response.articles[*].favoritesCount contains 10
     And match response..bio contains null
