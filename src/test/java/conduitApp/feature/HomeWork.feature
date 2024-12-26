@@ -16,8 +16,8 @@ Feature: Home Work
 
         #step 1: get articles of the global feed
         
-        And match firstArticleFavorited == true
-        And match firstArticlefavoritesCount == 1
+        And match firstArticleFavorited == false
+        And match firstArticlefavoritesCount == 0
         #step 2: get the favorites count and slug id for the first article, save to variable
         #step 3: make post request to increase favorites count for the first article
         Given path 'articles/'+firstArticleSlug+'/favorite' 
